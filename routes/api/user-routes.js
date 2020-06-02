@@ -52,6 +52,31 @@ router.post('/', (req,res)=>{
 
 });
 
+//Login route
+router.post('/login', (req,res) => {
+    User.findOne({ //expects email and password
+        where: {
+            email: req.body.email
+        }
+    })
+    .then(dbUserData => {
+        if(!dbUserData){
+            res.status(400).json({ message: 'User not found' });
+            return
+        }
+        //res.json({ user: dbUserData });
+
+        //Verify User
+        const validPassword = dbUserData.checkPassword(req.body.password); //checkPassword method is defined in the User.js file 
+        if(!validPassword) {
+            res.status(400).json({ message: 'Not a valid Password' });
+            return
+        }
+        res.json({ user: dbUserData, message: 'You are logged in!' });
+
+    });
+});
+
 //PUT /api/users/1 ==========================================================================
 router.put('/:id', (req,res) => {
     //expects {username, email and password}
