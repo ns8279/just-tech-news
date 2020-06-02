@@ -58,6 +58,7 @@ router.put('/:id', (req,res) => {
 
     //if req.body has exact key value pair to match the model, you can just req.body instead 
     User.update(req.body, {
+        individualHooks: true, // Add this after you add beforeUpdate lifecycle event in the User creation
         where: {
             id: req.params.id
         }
