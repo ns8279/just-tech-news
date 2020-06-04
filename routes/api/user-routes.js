@@ -1,11 +1,18 @@
 const router = require('express').Router();
-const { User } = require('../../models');
+const { User, Post, Vote } = require('../../models');
+//const sequelize = require('../../config/connection');
 
 //GET /api/users ============================================================================
 router.get('/', (req,res)=>{
     //Access our User model and run findALL()
     User.findAll({
-        attributes: { exclude: ['password'] } //protects the password
+        attributes: { exclude: ['password'] }, //protects the password
+        include: [
+            {
+                model: Post,
+                attributes: ['id', 'post_url', 'title', 'created_at']
+            }
+        ]
     }) //SQL = SELECT * from User
     .then(dbUserData => res.json(dbUserData))
     .catch(err => {
@@ -18,9 +25,24 @@ router.get('/', (req,res)=>{
 router.get('/:id', (req,res)=>{
     User.findOne({
         attributes: { exclude: ['password'] },
+        
         where: {
             id: req.params.id
-        }
+        },
+
+        include: [
+            {
+                model: Post,
+                attributes: ['id', 'post_url', 'title', 'created_at']
+            },
+            {
+                model: Post,
+                attributes: ['title'],
+                through: Vote,
+                as: 'voted_posts'
+            }
+        ]
+        
     })
     .then(dbUserData => {
         if(!dbUserData){
