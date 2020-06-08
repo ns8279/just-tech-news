@@ -87,7 +87,7 @@ router.post('/', (req,res)=>{
 
 });
 
-//Login route
+//Login route============================================================================
 router.post('/login', (req,res) => {
     User.findOne({ //expects email and password
         where: {
