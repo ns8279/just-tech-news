@@ -52,6 +52,7 @@ async function loginFormHandler(event) {
         //adding error handler
         if(response.ok) {
             console.log('Success');
+            document.location.replace('/');
         } else {
             alert (response.statusText);
         }
@@ -59,4 +60,4 @@ async function loginFormHandler(event) {
 }
 
 document.querySelector('.signup-form').addEventListener('submit', signupFormHandler);
-document.querySelector('.login-form').addEventListener('submit', loginFormHandler);
+document.querySelector('.login-form').addEventListener('click', loginFormHandler);
